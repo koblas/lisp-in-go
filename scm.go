@@ -109,6 +109,9 @@ func (e *env) Find(s symbol) *env {
 	if _, ok := e.vars[s]; ok {
 		return e
 	} else {
+        if e.outer == nil {
+            panic(fmt.Sprintf("Unable to find %v", s))
+        }
 		return e.outer.Find(s)
 	}
 }
@@ -150,11 +153,33 @@ func init() {
 				}
 				return v
 			},
+			">": func(a ...scmer) scmer {
+				return a[0].(number) > a[1].(number)
+			},
+			">=": func(a ...scmer) scmer {
+				return a[0].(number) >= a[1].(number)
+			},
+			"<": func(a ...scmer) scmer {
+				return a[0].(number) < a[1].(number)
+			},
 			"<=": func(a ...scmer) scmer {
 				return a[0].(number) <= a[1].(number)
 			},
 			"equal?": func(a ...scmer) scmer {
 				return reflect.DeepEqual(a[0], a[1])
+			},
+			"length": func(a ...scmer) scmer {
+				return number(len(a[0].([]scmer)))
+			},
+			"append": func(a ...scmer) scmer {
+                result := make([]scmer, 0)
+                for _, i := range(a) {
+                    result = append(result, i.([]scmer)[:]...)
+                }
+                return result
+			},
+			"null?": func(a ...scmer) scmer {
+				return len(a[0].([]scmer)) == 0
 			},
 			"cons": func(a ...scmer) scmer {
 				switch car := a[0]; cdr := a[1].(type) {
@@ -219,7 +244,9 @@ func readFrom(tokens *[]string) (expression scmer) {
 //Lexical Analysis
 func tokenize(s string) []string {
 	return strings.Split(
-		strings.Replace(strings.Replace(s, "(", "( ",
+		strings.Replace(strings.Replace(
+            strings.Replace(
+                strings.Replace(s, "\t", " ", -1), "\n", " ", -1), "(", "( ",
 			-1), ")", " )",
 			-1), " ")
 }
