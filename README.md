@@ -11,3 +11,6 @@ Wrote something that was a go clone with a bug I couldn't figure out, ended up f
 
 Cleaned it up a bit and fixed some bugs
 
+Things I noticed about the original GIST
+
+  * The tokenizer needs more work - doesn't handle strings
