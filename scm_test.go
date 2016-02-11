@@ -17,7 +17,7 @@ func TestLisp(t *testing.T) {
     }
 
     // the 29 unit tests for lis.py
-    TEST("(quote (testing 1 (2.0) -3.14e159))", "(testing 1 (2.0) -3.14e159)")
+    TEST("(quote (testing 1 (2.1) -3.14e159))", "(testing 1 (2.1) -3.14e+159)")
     TEST("(+ 2 2)", "4")
     TEST("(+ (* 2 100) (* 1 10))", "210")
     TEST("(if (> 6 5) (+ 1 1) (+ 2 2))", "2")
@@ -37,7 +37,7 @@ func TestLisp(t *testing.T) {
     TEST("(define fact (lambda (n) (if (<= n 1) 1 (* n (fact (- n 1))))))", "ok")
     TEST("(fact 3)", "6")
     //TEST("(fact 50)", "30414093201713378043612608166064768844377641568960512000000000000")
-    TEST("(fact 12)", "479001600"); // no bignums; this is as far as we go with 32 bits
+    TEST("(fact 12)", "4.790016e+08"); // no bignums; this is as far as we go with 32 bits
     TEST("(define abs (lambda (n) ((if (> n 0) + -) 0 n)))", "ok")
     TEST("(list (abs -3) (abs 0) (abs 3))", "(3 0 3)")
     TEST(`(define combine (lambda (f)
